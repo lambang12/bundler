@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "bundle install" do
+RSpec.describe "bundle install", :bundler => "< 3" do
   before :each do
     gemfile <<-G
       source "file://#{gem_repo1}"
