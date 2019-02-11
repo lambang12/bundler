@@ -124,11 +124,47 @@ RSpec.describe "bundle binstubs <gem>" do
         bundle! "binstubs bundler rack prints_loaded_gems"
       end
 
-      let(:system_bundler_version) { Bundler::VERSION }
+      # When environment has a same version of bundler as default gems.
+      # `system_gems "bundler-x.y.z"` will detect system binstub.
+      # We need to avoid it by virtual version of bundler.
+      let(:system_bundler_version) { Gem::Version.new(Bundler::VERSION).bump.to_s }
 
-      it "runs bundler" do
-        sys_exec! "#{bundled_app("bin/bundle")} install"
-        expect(out).to eq %(system bundler #{system_bundler_version}\n["install"])
+      context "when system bundler was used" do
+        # Support master branch of bundler
+        if ENV["BUNDLER_SPEC_SUB_VERSION"]
+          let(:system_bundler_version) { Bundler::VERSION }
+        end
+
+        before do
+          gemfile <<-G
+            source "https://rubygems.org"
+            gem "rack"
+            gem "prints_loaded_gems"
+          G
+
+          lockfile <<-G
+          GEM
+            remote: https://rubygems.org
+            specs:
+              prints_loaded_gems (1.0)
+              rack (1.2)
+
+          PLATFORMS
+            ruby
+
+          DEPENDENCIES
+            prints_loaded_gems
+            rack
+
+          BUNDLED WITH
+             #{system_bundler_version}
+          G
+        end
+
+        it "runs bundler" do
+          sys_exec! "#{bundled_app("bin/bundle")} install"
+          expect(out).to eq %(system bundler #{system_bundler_version}\n["install"])
+        end
       end
 
       context "when BUNDLER_VERSION is set" do
@@ -294,7 +330,7 @@ RSpec.describe "bundle binstubs <gem>" do
       expect(bundled_app("exec/rackup")).to exist
     end
 
-    it "setting is saved for bundle install", :bundler => "< 2" do
+    it "setting is saved for bundle install", :bundler => "< 3" do
       install_gemfile <<-G
         source "file://#{gem_repo1}"
         gem "rack"

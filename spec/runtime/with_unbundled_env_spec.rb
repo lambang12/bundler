@@ -166,7 +166,7 @@ RSpec.describe "Bundler.with_env helpers" do
       )
     end
 
-    it "does not print a deprecation", :bundler => "< 2" do
+    it "does not print a deprecation", :bundler => "< 3" do
       code = "Bundler.with_clean_env {}"
       bundle_exec_ruby! code.dump
       expect(last_command.stdboth).not_to include(
@@ -192,14 +192,14 @@ RSpec.describe "Bundler.with_env helpers" do
     end
   end
 
-  describe "Bundler.clean_system", :ruby => ">= 1.9", :bundler => "< 2" do
+  describe "Bundler.clean_system", :ruby => ">= 1.9", :bundler => "< 3" do
     it "runs system inside with_clean_env" do
       Bundler.clean_system(%(echo 'if [ "$BUNDLE_PATH" = "" ]; then exit 42; else exit 1; fi' | /bin/sh))
       expect($?.exitstatus).to eq(42)
     end
   end
 
-  describe "Bundler.clean_exec", :ruby => ">= 1.9", :bundler => "< 2" do
+  describe "Bundler.clean_exec", :ruby => ">= 1.9", :bundler => "< 3" do
     it "runs exec inside with_clean_env" do
       pid = Kernel.fork do
         Bundler.clean_exec(%(echo 'if [ "$BUNDLE_PATH" = "" ]; then exit 42; else exit 1; fi' | /bin/sh))
