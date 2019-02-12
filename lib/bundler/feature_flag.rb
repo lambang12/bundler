@@ -63,8 +63,6 @@ module Bundler
 
     settings_method(:github_https?, "github.https") { bundler_2_mode? }
 
-    settings_method(:github_https?, "github.https") { bundler_2_mode? }
-
     def initialize(bundler_version)
       @bundler_version = Gem::Version.create(bundler_version)
     end
