@@ -27,10 +27,10 @@ RSpec.describe "bundle show", :bundler => "< 3" do
 
     it "prints path if gem exists in bundle", :bundler => "< 3" do
       bundle "show rails"
-      expect(out).to eq(default_bundle_path("gems", "rails-2.3.2").to_s)
+      expect(out).to include default_bundle_path("gems", "rails-2.3.2").to_s
     end
 
-    it "prints path if gem exists in bundle", :bundler => "3" do
+    it "prints path if gem exists in bundle", :bundler => "2" do
       bundle "show rails"
       expect(out).to eq(
         "[DEPRECATED FOR 2.0] use `bundle info rails` instead of `bundle show rails`\n" +
@@ -40,10 +40,10 @@ RSpec.describe "bundle show", :bundler => "< 3" do
 
     it "prints path if gem exists in bundle (with --paths option)", :bundler => "< 3" do
       bundle "show rails --paths"
-      expect(out).to eq(default_bundle_path("gems", "rails-2.3.2").to_s)
+      expect(out).to include default_bundle_path("gems", "rails-2.3.2").to_s
     end
 
-    it "prints path if gem exists in bundle (with --paths option)", :bundler => "3" do
+    it "prints path if gem exists in bundle (with --paths option)", :bundler => "2" do
       bundle "show rails --paths"
       expect(out).to eq(
         "[DEPRECATED FOR 2.0] use `bundle info rails --path` instead of `bundle show rails --paths`\n" +
@@ -62,10 +62,10 @@ RSpec.describe "bundle show", :bundler => "< 3" do
 
     it "prints the path to the running bundler", :bundler => "< 3" do
       bundle "show bundler"
-      expect(out).to eq(root.to_s)
+      expect(out).to include root.to_s
     end
 
-    it "prints the path to the running bundler", :bundler => "3" do
+    it "prints the path to the running bundler", :bundler => "2" do
       bundle "show bundler"
       expect(out).to eq(
         "[DEPRECATED FOR 2.0] use `bundle info bundler` instead of `bundle show bundler`\n" +
@@ -85,11 +85,12 @@ RSpec.describe "bundle show", :bundler => "< 3" do
       expect(out).to include(default_bundle_path("gems", "rails-2.3.2").to_s)
 
       # Gem names are the last component of their path.
-      gem_list = out.split.map {|p| p.split("/").last }
+      output = out.dup.split("\n").reject { |l| l =~ /DEPRECATED/ }
+      gem_list = output.map {|p| p.split("/").last }
       expect(gem_list).to eq(gem_list.sort)
     end
 
-    it "prints path of all gems in bundle sorted by name", :bundler => "3" do
+    it "prints path of all gems in bundle sorted by name", :bundler => "2" do
       bundle "show --paths"
 
       expect(out).to include(default_bundle_path("gems", "rake-12.3.2").to_s)

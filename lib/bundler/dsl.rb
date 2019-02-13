@@ -497,7 +497,7 @@ repo_name ||= user_name
       end
 
       Bundler::SharedHelpers.major_deprecation 2, <<-EOS
-The :#{name} git source is deprecated, and will be removed in Bundler 2.0.#{additional_message} Add this code to the top of your Gemfile to ensure it continues to work:
+The :#{name} git source is deprecated, and will be removed in Bundler 3.0.#{additional_message} Add this code to the top of your Gemfile to ensure it continues to work:
 
     git_source(:#{name}) #{replacement}
 

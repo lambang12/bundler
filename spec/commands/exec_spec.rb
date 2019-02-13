@@ -139,7 +139,7 @@ RSpec.describe "bundle exec" do
 
     bundle! "exec rackup"
 
-    expect(out).to eq("0.9.1")
+    expect(out).to include "0.9.1"
 
     Dir.chdir bundled_app2 do
       bundle! "exec rackup"
