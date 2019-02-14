@@ -85,7 +85,7 @@ RSpec.describe "bundle show", :bundler => "< 3" do
       expect(out).to include(default_bundle_path("gems", "rails-2.3.2").to_s)
 
       # Gem names are the last component of their path.
-      output = out.dup.split("\n").reject { |l| l =~ /DEPRECATED/ }
+      output = out.dup.split("\n").reject {|l| l =~ /DEPRECATED/ }
       gem_list = output.map {|p| p.split("/").last }
       expect(gem_list).to eq(gem_list.sort)
     end
